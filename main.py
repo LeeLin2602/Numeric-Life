@@ -20,6 +20,13 @@ def prepare(event):
 
 	if rounds * 2 > width * height:
 		messagebox.showinfo("Error","Too many rounds! (less than %s)" % str(1 + (width * height)//2))
+		return
+
+	if not (1 <= width <= 24 and 1 <= height <= 24):
+		messagebox.showinfo("Error","Map Too Large! (Both height and width less than 24)")
+		return
+
+
 	root.destroy()
 
 	keep = True
@@ -38,24 +45,27 @@ def start_game(width, height, rounds):
 	Labels = [[] for i in range(height)]
 	Scores = [[] for i in range(height)]
 	
-	Red_Score = Label(root, height = 1, width = 10, text = "RED :" , justify = LEFT)
-	Blue_Score = Label(root, height = 1, width = 10, text = "BLUE:", justify = LEFT)
-	Red_Score_msg = Label(root, height = 1, width = 10, text = "0" , justify = LEFT)
-	Blue_Score_msg = Label(root, height = 1, width = 10, text = "0", justify = LEFT)
+	round_msg = Label(root, height = 1, width = 15, text = "Round: 1.1 / %s" % rounds, anchor = W)
+	Red_Score = Label(root, height = 1, width = 15, text = "RED :" , anchor = W)
+	Blue_Score = Label(root, height = 1, width = 15, text = "BLUE:", anchor = W)
+	Red_Score_msg = Label(root, height = 1, width = 10, text = "0" )
+	Blue_Score_msg = Label(root, height = 1, width = 10, text = "0")
 
+	round_msg.pack()
 	Red_Score.pack()
 	Blue_Score.pack()
 	Red_Score_msg.pack()
 	Blue_Score_msg.pack()
-	Red_Score.place(x = 680, y = 30)
-	Blue_Score.place(x = 680, y = 60)
-	Red_Score_msg.place(x = 750, y = 30)
-	Blue_Score_msg.place(x = 750, y = 60)
+	round_msg.place(x = 700, y = 30)
+	Red_Score.place(x = 700, y = 60)
+	Blue_Score.place(x = 700, y = 90)
+	Red_Score_msg.place(x = 740, y = 60)
+	Blue_Score_msg.place(x = 740, y = 90)
 	Counters = [0, 0]
 	turn = 0
 
 	def click(event, i, j, prm = 0):
-		nonlocal turn, Labels, Scores, width, height, Counters, rounds, Red_Score_msg, Blue_Score_msg
+		nonlocal turn, Labels, Scores, width, height, Counters, rounds, round_msg, Red_Score_msg, Blue_Score_msg
 		
 		if not (0 <= event.x <= 660 // height - 3  and 0 <= event.y <= 660 // width - 3):
 			return
@@ -87,10 +97,12 @@ def start_game(width, height, rounds):
 		Blue_Score_msg.config(text = str(Counters[1]))
 
 		turn = turn + 1
-
+		round_msg.config(text = "Round: %s.%s / %s" % (turn // 2 + 1, turn % 2 + 1, rounds))
+		
 		if turn//2 == rounds:
 			Counters[1] -= score // 2
-			Blue_Score_msg.config(text = "BLUE: %s" % str(Counters[1]))
+			Blue_Score_msg.config(text = str(Counters[1]))
+			round_msg.config(text = "Game Set")
 			if Counters[0] > Counters[1]:
 				messagebox.showinfo("Game Set","The Winner is RED!")
 			elif Counters[0] == Counters[1]:
@@ -102,7 +114,7 @@ def start_game(width, height, rounds):
 	for i in range(height):
 		for j in range(width):
 			Scores[i].append(0)
-			Labels[i].append(Label(Blocks[i][j], bg = WHITE, anchor = CENTER,text = "", font = ("Helvetica %s bold" % str((660 // width - 3)//6))))
+			Labels[i].append(Label(Blocks[i][j], bg = WHITE, anchor = CENTER,text = "", font = ("Helvetica %s bold" % str(max(8,int((660 // width - 3)//5.5))))))
 			Labels[i][j].bind("<ButtonRelease-1>",lambda event, a = i, b = j: click(event, a, b, 0))
 			Labels[i][j].bind("<ButtonRelease-3>",lambda event, a = i, b = j: click(event, a, b, 1))
 			Blocks[i][j].pack()
