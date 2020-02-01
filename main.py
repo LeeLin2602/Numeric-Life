@@ -63,10 +63,25 @@ def start_game(width, height, rounds):
 	Blue_Score_msg.place(x = 740, y = 90)
 	Counters = [0, 0]
 	turn = 0
+	keep_game = True
+	show_numb = True
 
 	def click(event, i, j, prm = 0):
-		nonlocal turn, Labels, Scores, width, height, Counters, rounds, round_msg, Red_Score_msg, Blue_Score_msg
+		nonlocal keep_game, turn, Labels, Scores, width, height, Counters, rounds, round_msg, Red_Score_msg, Blue_Score_msg, show_numb
 		
+		if not keep_game:
+			if show_numb:
+				for i in range(height):
+					for j in range(width):
+						Labels[i][j].config(text = "")
+			else:
+				for i in range(height):
+					for j in range(width):
+						Labels[i][j].config(text = str(Scores[i][j]if Scores[i][j] != 0 else ""))
+
+			show_numb = show_numb == False
+			return 
+
 		if not (0 <= event.x <= 660 // height - 3  and 0 <= event.y <= 660 // width - 3):
 			return
 
@@ -100,6 +115,7 @@ def start_game(width, height, rounds):
 		round_msg.config(text = "Round: %s.%s / %s" % (turn // 2 + 1, turn % 2 + 1, rounds))
 		
 		if turn//2 == rounds:
+			keep_game = False
 			Counters[1] -= score // 2
 			Blue_Score_msg.config(text = str(Counters[1]))
 			round_msg.config(text = "Game Set")
