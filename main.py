@@ -38,6 +38,7 @@ def start_game(width, height, rounds):
 	root.title("Numeric Life - Main")
 	root.iconbitmap(str(pathlib.Path(__file__).parent) + "\icon.ico")
 	root.resizable(False, False)
+	root.config(bg = "#ECECEC")
 
 	WHITE = "#FFFFFF"
 
@@ -45,11 +46,11 @@ def start_game(width, height, rounds):
 	Labels = [[] for i in range(height)]
 	Scores = [[] for i in range(height)]
 	
-	round_msg = Label(root, height = 1, width = 15, text = "Round: 1.1 / %s" % rounds, anchor = W)
-	Red_Score = Label(root, height = 1, width = 15, text = "RED :" , anchor = W)
-	Blue_Score = Label(root, height = 1, width = 15, text = "BLUE:", anchor = W)
-	Red_Score_msg = Label(root, height = 1, width = 10, text = "0" )
-	Blue_Score_msg = Label(root, height = 1, width = 10, text = "0")
+	round_msg = Label(root, height = 1, width = 15, text = "Round: 1.1 / %s" % rounds, anchor = W, bg = "#ECECEC")
+	Red_Score = Label(root, height = 1, width = 15, text = "RED :" , anchor = W, bg = "#ECECEC")
+	Blue_Score = Label(root, height = 1, width = 15, text = "BLUE:", anchor = W, bg = "#ECECEC")
+	Red_Score_msg = Label(root, height = 1, width = 10, text = "0" , bg = "#ECECEC")
+	Blue_Score_msg = Label(root, height = 1, width = 10, text = "0", bg = "#ECECEC")
 
 	round_msg.pack()
 	Red_Score.pack()
